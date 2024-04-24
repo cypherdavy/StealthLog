@@ -156,7 +156,7 @@ Develop a professional version of StealthLog for use in enterprise environments
  Clone the StealthLog repository:
  ```bash
 git clone https://github.com/[your-username]/StealthLog.git
-
+```
 Change into the StealthLog directory:
 ```bash
 cd StealthLog
