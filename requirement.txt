@@ -1,0 +1,5 @@
+
+pynput==1.7.3
+This requirement.txt file specifies the pynput package and its required version (1.7.3). Users can install the required dependencies for your tool by running:
+pip install -r requirements.txt
+This command will install all the dependencies listed in the requirement.txt file.
