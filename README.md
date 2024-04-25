@@ -42,7 +42,7 @@ StealthLog is a simple keylogger tool built using Python and the pynput library.
 
 Clone the repository:
 ```bash
-git clone https://github.com/<your-username>/StealthLog.git
+git clone https://github.com/cypherdavy/StealthLog.git
 cd StealthLog
 Install the required packages:
 pip3 install -r requirements.txt
@@ -55,7 +55,7 @@ python3 stealthlog.py
 
 Download the repository as a ZIP file:
 ```bash
-https://github.com/<your-username>/StealthLog/archive/master.zip
+https://github.com/cypherdavy/StealthLog.git
 ```
 Extract the ZIP file.
 
@@ -129,9 +129,7 @@ Another challenge I faced was ensuring that the tool was easy to install and use
 
 Overall, the most important lesson I learned while building StealthLog was the importance of ethical considerations when building and using monitoring tools. It is essential to use such tools responsibly and with proper authorization, and to ensure that they do not violate user privacy or security.
 
-Hashtags: #keylogger #stealthlog #developertools #python #gpl #openSource #cybersecurity 📝🔒✨
 
-Note: This FAQ is for educational purposes only and should not be taken as encouragement to engage in illegal activities. Always use technology responsibly and ethically.
 
 ## Roadmap
 
@@ -155,7 +153,7 @@ Develop a professional version of StealthLog for use in enterprise environments
 
  Clone the StealthLog repository:
  ```bash
-git clone https://github.com/[your-username]/StealthLog.git
+git clone https://github.com/cypherdavy/StealthLog.git
 ```
 Change into the StealthLog directory:
 ```bash
