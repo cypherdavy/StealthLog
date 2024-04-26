@@ -40,14 +40,16 @@ StealthLog is a simple keylogger tool built using Python and the pynput library.
 **Parrot Linux / Kali Linux / Termux**
 
 
-Clone the repository:
+## Clone the repository:
 ```bash
 git clone https://github.com/cypherdavy/StealthLog.git
 cd StealthLog
-Install the required packages:
+```
+## Install the required packages:
+```bash
 pip3 install -r requirements.txt
 ```
-Run the tool:
+## Run the tool:
 ```bash
 python3 stealthlog.py
 ```
