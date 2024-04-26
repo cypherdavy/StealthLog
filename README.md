@@ -43,6 +43,8 @@ StealthLog is a simple keylogger tool built using Python and the pynput library.
 ## Clone the repository:
 ```bash
 git clone https://github.com/cypherdavy/StealthLog.git
+```
+```bash
 cd StealthLog
 ```
 ## Install the required packages:
