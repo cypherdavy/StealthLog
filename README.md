@@ -47,6 +47,10 @@ git clone https://github.com/cypherdavy/StealthLog.git
 ```bash
 cd StealthLog
 ```
+## Install the required libraries using pip
+```bash
+pip install pynput pyautogui
+```
 ## Install the required packages:
 ```bash
 pip3 install -r requirements.txt
